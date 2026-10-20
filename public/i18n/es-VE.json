@@ -59,5 +59,35 @@
   "session": {
     "logout": "Cerrar sesión",
     "greeting": "Hola, {{name}}"
+  },
+  "shell": {
+    "skip": "Saltar al contenido",
+    "clinic": "Clínica",
+    "menu": "Menú",
+    "mainMenu": "Menú principal",
+    "dismiss": "Cerrar aviso",
+    "noClinics": {
+      "title": "Aún no tienes una clínica",
+      "text": "Tu cuenta no está vinculada a ninguna clínica. Pide a tu clínica que te invite o te vincule con tu paciente."
+    }
+  },
+  "nav": {
+    "agenda": "Agenda",
+    "pacientes": "Pacientes",
+    "urgencias": "Urgencias",
+    "historia": "Historia clínica",
+    "examenes": "Exámenes",
+    "personal": "Personal",
+    "clinica": "Mi clínica"
+  },
+  "comingSoon": {
+    "text": "Esta sección está en construcción."
+  },
+  "errors": {
+    "network": "No hay conexión con el servidor. Revisa tu internet e inténtalo de nuevo.",
+    "forbidden": "No tienes permiso para hacer esto en esta clínica.",
+    "stale": "Alguien más cambió este registro. Recarga para ver la versión actual.",
+    "tooMany": "Demasiadas solicitudes. Espera un momento e inténtalo de nuevo.",
+    "server": "El servicio tuvo un problema. Inténtalo de nuevo en unos minutos."
   }
 }

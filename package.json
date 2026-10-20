@@ -58,6 +58,7 @@
     "@tailwindcss/postcss": "^4.3.3",
     "@types/jasmine": "~6.0.0",
     "@types/node": "^22.19.0",
+    "axe-core": "^4.14.0",
     "concurrently": "^10.0.6",
     "jasmine-core": "~6.3.0",
     "karma": "~6.4.4",
