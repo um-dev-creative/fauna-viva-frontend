@@ -1,0 +1,14 @@
+/dist/
+/out-tsc/
+/tmp/
+/coverage/
+/.angular/
+/node_modules/
+/package-lock.json
+/yarn.lock
+.env
+ssl/
+*.tsbuildinfo
+npm-debug.log*
+.DS_Store
+.idea/
