@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-fv-ink: #0f2f2e;
+  --color-fv-teal: #1f7a70;
+  --color-fv-mint: #7ed6c8;
+  --color-fv-paper: #f6f3ec;
+  --color-fv-card: #fffdf8;
+  --color-fv-line: #dad5c6;
+  --font-sans: 'Nunito Sans', Arial, sans-serif;
+  --font-display: 'Domine', Georgia, serif;
+}
+
+body {
+  @apply bg-fv-paper font-sans text-fv-ink;
+}

@@ -1,0 +1,32 @@
+name: CI
+on:
+  push:
+    branches: [main, development]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # pnpm version from package.json (packageManager)
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: BFF tests (fails below 85 % lines / branches / functions)
+        run: pnpm run test:bff:coverage
+      - name: Angular unit tests (fails below 85 % statements / branches / functions / lines, or if a source file has no test)
+        run: pnpm run test:coverage
+      - name: Keep the coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: coverage/
+      - name: Production build
+        run: pnpm exec ng build --configuration production
+      - name: Docker image builds
+        run: docker build -t fauna-viva-frontend:ci .
