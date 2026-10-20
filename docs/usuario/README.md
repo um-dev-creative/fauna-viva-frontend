@@ -1,3 +1,8 @@
 # Documentación de usuario
 
-El esqueleto del portal (tarea F0-05) no cambia nada visible para un rol. Las guías de usuario se agregan con cada historia: iniciar sesión (B-01), gestionar citas (A-04), etc., y se publican en la base de conocimientos.
+Guías por tarea, para publicar en la base de conocimientos.
+
+- [Iniciar y cerrar sesión](iniciar-y-cerrar-sesion.md) — todos los roles (B-01).
+- [Crear mi cuenta](crear-mi-cuenta.md) — apoderados (B-01).
+
+Cada historia nueva agrega su guía aquí.

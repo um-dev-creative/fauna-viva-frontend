@@ -1,0 +1,81 @@
+<main class="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 px-4 py-8">
+  <header>
+    <p class="text-sm font-bold uppercase tracking-widest text-fv-teal">{{ 'app.name' | translate }}</p>
+    <h1 class="font-display text-3xl font-bold">{{ 'auth.register.title' | translate }}</h1>
+  </header>
+
+  @switch (step()) {
+    @case ('data') {
+      <form [formGroup]="data" (ngSubmit)="register()" class="flex flex-col gap-4" novalidate>
+        @for (field of ['firstName', 'lastName', 'alias', 'email', 'password']; track field) {
+          <label class="flex flex-col gap-1">
+            <span class="text-sm font-semibold">{{ 'auth.fields.' + field | translate }}</span>
+            <input
+              class="min-h-11 rounded-xl border border-fv-line bg-fv-card px-3"
+              [type]="field === 'password' ? 'password' : field === 'email' ? 'email' : 'text'"
+              [formControlName]="field"
+              [attr.autocomplete]="field === 'password' ? 'new-password' : field === 'email' ? 'email' : null"
+            />
+          </label>
+        }
+        <p class="min-h-6 text-sm text-red-700" role="alert" aria-live="assertive">
+          @if (error(); as e) {
+            {{ 'auth.register.errors.' + e | translate }}
+          } @else if (data.touched && data.invalid) {
+            {{ 'auth.register.errors.incomplete' | translate }}
+          }
+        </p>
+        <button type="submit" class="min-h-11 rounded-xl bg-fv-teal px-4 font-semibold text-white disabled:opacity-60" [disabled]="busy()">
+          {{ 'auth.register.submit' | translate }}
+        </button>
+      </form>
+    }
+    @case ('code') {
+      <form (submit)="$event.preventDefault(); verify()" class="flex flex-col gap-4" novalidate>
+        <p>{{ 'auth.verify.instructions' | translate }}</p>
+        <label class="flex flex-col gap-1">
+          <span class="text-sm font-semibold">{{ 'auth.fields.code' | translate }}</span>
+          <input
+            class="min-h-11 rounded-xl border border-fv-line bg-fv-card px-3 tracking-widest"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            autocomplete="one-time-code"
+            [formControl]="code"
+          />
+        </label>
+        <p class="min-h-6 text-sm text-red-700" role="alert" aria-live="assertive">
+          @if (error(); as e) {
+            {{ 'auth.register.errors.' + e | translate }}
+          }
+        </p>
+        <p class="min-h-6 text-sm text-fv-teal" role="status" aria-live="polite">
+          @if (resent()) {
+            {{ 'auth.verify.resent' | translate }}
+          }
+        </p>
+        <button type="submit" class="min-h-11 rounded-xl bg-fv-teal px-4 font-semibold text-white disabled:opacity-60" [disabled]="busy()">
+          {{ 'auth.verify.submit' | translate }}
+        </button>
+        <button type="button" class="min-h-11 rounded-xl border border-fv-line px-4 font-semibold" [disabled]="busy()" (click)="resend()">
+          {{ 'auth.verify.resend' | translate }}
+        </button>
+      </form>
+    }
+    @case ('done') {
+      <section class="flex flex-col gap-4" role="status">
+        <p>{{ 'auth.verify.done' | translate }}</p>
+        <a routerLink="/login" class="inline-flex min-h-11 items-center justify-center rounded-xl bg-fv-teal px-4 font-semibold text-white">
+          {{ 'auth.verify.goToLogin' | translate }}
+        </a>
+      </section>
+    }
+  }
+
+  @if (step() === 'data') {
+    <p class="text-sm">
+      {{ 'auth.register.haveAccount' | translate }}
+      <a routerLink="/login" class="font-semibold text-fv-teal underline">{{ 'auth.register.login' | translate }}</a>
+    </p>
+  }
+</main>
