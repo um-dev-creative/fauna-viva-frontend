@@ -74,6 +74,7 @@ sequenceDiagram
 - `src/app/{core,shared,features}`; rutas cargadas de forma diferida; alias `@app`, `@core`, `@features`, `@env`.
 - Textos en `public/i18n/es-VE.json`, cargados con `provideTranslateHttpLoader`. Idioma por defecto y de respaldo: `es-VE`.
 - Estilos con Tailwind CSS 4; los colores de marca son tokens `--color-fv-*` en `src/styles.css` (la marca por clínica, P-08, los reemplaza).
+- Estructura por rol, clínica activa, interceptores y formatos: ver [`docs/tecnica/portal/estructura.md`](tecnica/portal/estructura.md).
 - Las llamadas van a `/api/v1`; en desarrollo `proxy.conf.json` las envía al BFF.
 
 ## Calidad

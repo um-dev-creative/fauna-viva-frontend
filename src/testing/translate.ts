@@ -6,51 +6,86 @@ import { of } from 'rxjs';
 export const TEST_TRANSLATIONS: TranslationObject = {
   app: { name: 'Fauna Viva' },
   home: { title: 'Bienvenido', subtitle: 'Subtítulo', status: 'En construcción' },
-  auth: {
-    "fields": {
-      "email": "Correo electrónico",
-      "password": "Contraseña",
-      "firstName": "Nombre",
-      "lastName": "Apellido",
-      "alias": "Nombre de usuario",
-      "code": "Código de 6 dígitos"
-    },
-    "login": {
-      "title": "Iniciar sesión",
-      "submit": "Entrar",
-      "noAccount": "¿Eres apoderado y aún no tienes cuenta?",
-      "createAccount": "Crear mi cuenta",
-      "errors": {
-        "required": "Escribe tu correo y tu contraseña.",
-        "invalid": "Correo o contraseña incorrectos.",
-        "tooMany": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
-        "unavailable": "No pudimos validar tu acceso. Inténtalo de nuevo en unos minutos."
+  ...({
+    "auth": {
+      "fields": {
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "alias": "Nombre de usuario",
+        "code": "Código de 6 dígitos"
+      },
+      "login": {
+        "title": "Iniciar sesión",
+        "submit": "Entrar",
+        "noAccount": "¿Eres apoderado y aún no tienes cuenta?",
+        "createAccount": "Crear mi cuenta",
+        "errors": {
+          "required": "Escribe tu correo y tu contraseña.",
+          "invalid": "Correo o contraseña incorrectos.",
+          "tooMany": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
+          "unavailable": "No pudimos validar tu acceso. Inténtalo de nuevo en unos minutos."
+        }
+      },
+      "register": {
+        "title": "Crear mi cuenta",
+        "submit": "Crear cuenta",
+        "haveAccount": "¿Ya tienes cuenta?",
+        "login": "Iniciar sesión",
+        "errors": {
+          "incomplete": "Completa todos los datos: el usuario con al menos 3 caracteres y la contraseña con al menos 8.",
+          "exists": "Ya existe una cuenta con ese usuario o correo.",
+          "invalid": "Revisa los datos: alguno no es válido.",
+          "tooMany": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
+          "unavailable": "No pudimos completar el registro. Inténtalo de nuevo en unos minutos.",
+          "badCode": "El código no es válido o venció. Revisa los 6 dígitos o pide uno nuevo."
+        }
+      },
+      "verify": {
+        "instructions": "Te enviamos un código de 6 dígitos por correo. Escríbelo aquí para confirmar tu cuenta.",
+        "submit": "Confirmar correo",
+        "resend": "Enviarme otro código",
+        "resent": "Te enviamos un código nuevo.",
+        "done": "Tu correo quedó confirmado. Ya puedes iniciar sesión.",
+        "goToLogin": "Ir a iniciar sesión"
       }
     },
-    "register": {
-      "title": "Crear mi cuenta",
-      "submit": "Crear cuenta",
-      "haveAccount": "¿Ya tienes cuenta?",
-      "login": "Iniciar sesión",
-      "errors": {
-        "incomplete": "Completa todos los datos: el usuario con al menos 3 caracteres y la contraseña con al menos 8.",
-        "exists": "Ya existe una cuenta con ese usuario o correo.",
-        "invalid": "Revisa los datos: alguno no es válido.",
-        "tooMany": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
-        "unavailable": "No pudimos completar el registro. Inténtalo de nuevo en unos minutos.",
-        "badCode": "El código no es válido o venció. Revisa los 6 dígitos o pide uno nuevo."
+    "session": {
+      "logout": "Cerrar sesión",
+      "greeting": "Hola, {{name}}"
+    },
+    "shell": {
+      "skip": "Saltar al contenido",
+      "clinic": "Clínica",
+      "menu": "Menú",
+      "mainMenu": "Menú principal",
+      "dismiss": "Cerrar aviso",
+      "noClinics": {
+        "title": "Aún no tienes una clínica",
+        "text": "Tu cuenta no está vinculada a ninguna clínica. Pide a tu clínica que te invite o te vincule con tu paciente."
       }
     },
-    "verify": {
-      "instructions": "Te enviamos un código de 6 dígitos por correo. Escríbelo aquí para confirmar tu cuenta.",
-      "submit": "Confirmar correo",
-      "resend": "Enviarme otro código",
-      "resent": "Te enviamos un código nuevo.",
-      "done": "Tu correo quedó confirmado. Ya puedes iniciar sesión.",
-      "goToLogin": "Ir a iniciar sesión"
+    "nav": {
+      "agenda": "Agenda",
+      "pacientes": "Pacientes",
+      "urgencias": "Urgencias",
+      "historia": "Historia clínica",
+      "examenes": "Exámenes",
+      "personal": "Personal",
+      "clinica": "Mi clínica"
+    },
+    "comingSoon": {
+      "text": "Esta sección está en construcción."
+    },
+    "errors": {
+      "network": "No hay conexión con el servidor. Revisa tu internet e inténtalo de nuevo.",
+      "forbidden": "No tienes permiso para hacer esto en esta clínica.",
+      "stale": "Alguien más cambió este registro. Recarga para ver la versión actual.",
+      "tooMany": "Demasiadas solicitudes. Espera un momento e inténtalo de nuevo.",
+      "server": "El servicio tuvo un problema. Inténtalo de nuevo en unos minutos."
     }
-  },
-  session: { logout: 'Cerrar sesión', greeting: 'Hola, {{name}}' },
+  } as TranslationObject),
   notFound: { title: 'No encontrada', back: 'Inicio' },
 };
 
