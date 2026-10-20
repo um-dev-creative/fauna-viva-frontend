@@ -1,0 +1,15 @@
+{
+  "app": {
+    "name": "Fauna Viva",
+    "tagline": "Gestión de pacientes veterinarios"
+  },
+  "home": {
+    "title": "Bienvenido a Fauna Viva",
+    "subtitle": "Citas, historia clínica, exámenes y avisos de tus pacientes en un solo lugar.",
+    "status": "El portal está en construcción."
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "back": "Volver al inicio"
+  }
+}
