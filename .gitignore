@@ -12,3 +12,4 @@ ssl/
 npm-debug.log*
 .DS_Store
 .idea/
+!/pnpm-lock.yaml
