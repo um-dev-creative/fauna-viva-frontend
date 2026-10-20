@@ -33,6 +33,8 @@ module.exports = {
   // per client IP; a screen fires several calls, so this is generous (login has its own, stricter limit)
   RATE_LIMIT_MAX: parseInt(process.env['RATE_LIMIT_MAX'] || '1200', 10),
   LOGIN_RATE_LIMIT_MAX: parseInt(process.env['LOGIN_RATE_LIMIT_MAX'] || '10', 10),
+  // the public registration routes, per client IP and window (the API has its own, stricter, limits behind this one)
+  REGISTRATION_RATE_LIMIT_MAX: parseInt(process.env['REGISTRATION_RATE_LIMIT_MAX'] || '20', 10),
   SSL_CERT_PATH: process.env['SSL_CERT_PATH'] || '',
   SSL_KEY_PATH: process.env['SSL_KEY_PATH'] || '',
   SESSION_COOKIE: 'fv_session',

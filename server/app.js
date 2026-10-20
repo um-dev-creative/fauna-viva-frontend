@@ -3,6 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const compression = require('compression');
+const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const path = require('node:path');
 const { existsSync } = require('node:fs');
@@ -18,6 +19,7 @@ const {
 } = require('./config/constants');
 const { traceMiddleware } = require('./shared/trace');
 const { requireCsrfHeader } = require('./shared/csrf');
+const authRoutes = require('./routes/auth.routes');
 
 /** @param {{distPath?: string}} [options] where the built Angular app lives (overridable for tests) */
 function createApp({ distPath = path.join(__dirname, '../dist/fauna-viva-frontend/browser') } = {}) {
@@ -34,6 +36,7 @@ function createApp({ distPath = path.join(__dirname, '../dist/fauna-viva-fronten
     exposedHeaders: ['ETag', 'X-Total-Count', 'Link', 'Idempotent-Replayed', 'X-Trace-Id'],
   }));
   app.use(express.json({ limit: '2mb' }));
+  app.use(cookieParser());
   app.use(rateLimit({ windowMs: RATE_LIMIT_WINDOW_MS, max: RATE_LIMIT_MAX, standardHeaders: true, legacyHeaders: false }));
 
   app.use(traceMiddleware({ enabled: TRACING_ENABLED, sampleRate: TRACE_SAMPLE_RATE }));
@@ -41,6 +44,7 @@ function createApp({ distPath = path.join(__dirname, '../dist/fauna-viva-fronten
   app.get('/health', (_req, res) => res.json({ status: 'UP' }));
 
   app.use('/api', requireCsrfHeader);
+  app.use('/api/v1/auth', authRoutes);
   // an unknown API path is a 404, not the SPA's index.html (which would answer 200 to a typo'd endpoint)
   app.use('/api', (_req, res) => res.status(404).json({ error: 'Not found' }));
 

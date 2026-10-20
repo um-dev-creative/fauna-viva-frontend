@@ -1,0 +1,49 @@
+<main class="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 px-4 py-8">
+  <header>
+    <p class="text-sm font-bold uppercase tracking-widest text-fv-teal">{{ 'app.name' | translate }}</p>
+    <h1 class="font-display text-3xl font-bold">{{ 'auth.login.title' | translate }}</h1>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4" novalidate>
+    <label class="flex flex-col gap-1">
+      <span class="text-sm font-semibold">{{ 'auth.fields.email' | translate }}</span>
+      <input
+        class="min-h-11 rounded-xl border border-fv-line bg-fv-card px-3"
+        type="email"
+        formControlName="email"
+        autocomplete="username"
+        inputmode="email"
+      />
+    </label>
+    <label class="flex flex-col gap-1">
+      <span class="text-sm font-semibold">{{ 'auth.fields.password' | translate }}</span>
+      <input
+        class="min-h-11 rounded-xl border border-fv-line bg-fv-card px-3"
+        type="password"
+        formControlName="password"
+        autocomplete="current-password"
+      />
+    </label>
+
+    <p class="min-h-6 text-sm text-red-700" role="alert" aria-live="assertive">
+      @if (error(); as e) {
+        {{ 'auth.login.errors.' + e | translate }}
+      } @else if (form.touched && form.invalid) {
+        {{ 'auth.login.errors.required' | translate }}
+      }
+    </p>
+
+    <button
+      type="submit"
+      class="min-h-11 rounded-xl bg-fv-teal px-4 font-semibold text-white disabled:opacity-60"
+      [disabled]="busy()"
+    >
+      {{ 'auth.login.submit' | translate }}
+    </button>
+  </form>
+
+  <p class="text-sm">
+    {{ 'auth.login.noAccount' | translate }}
+    <a routerLink="/registro" class="font-semibold text-fv-teal underline">{{ 'auth.login.createAccount' | translate }}</a>
+  </p>
+</main>
