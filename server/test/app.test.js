@@ -52,21 +52,21 @@ test('a client-side route gets the app', async () => {
 });
 
 test('an unknown /api path is a JSON 404, never the app', async () => {
-  const res = await built.call('/api/v1/typo');
+  const res = await built.call('/api/typo');
 
   assert.equal(res.status, 404);
   assert.deepEqual(await res.json(), { error: 'Not found' });
 });
 
 test('a state-changing /api call without the CSRF header is refused', async () => {
-  const res = await built.call('/api/v1/typo', { method: 'POST', body: { a: 1 }, csrf: false });
+  const res = await built.call('/api/typo', { method: 'POST', body: { a: 1 }, csrf: false });
 
   assert.equal(res.status, 403);
   assert.deepEqual(await res.json(), { error: 'Missing CSRF header' });
 });
 
 test('a GET to /api does not need the CSRF header', async () => {
-  const res = await built.call('/api/v1/typo', { csrf: false });
+  const res = await built.call('/api/typo', { csrf: false });
 
   assert.equal(res.status, 404);
 });
@@ -88,7 +88,7 @@ test('CORS allows the configured origin with credentials and exposes the trace a
 });
 
 test('the preflight lets the browser send the CSRF and clinic headers', async () => {
-  const res = await built.call('/api/v1/typo', {
+  const res = await built.call('/api/typo', {
     method: 'OPTIONS', csrf: false,
     headers: { Origin: 'http://localhost:4200', 'Access-Control-Request-Method': 'POST', 'Access-Control-Request-Headers': 'x-fv-csrf,x-clinic-id,idempotency-key' },
   });

@@ -36,6 +36,8 @@ const initialState = () => ({
   logoutCalls: [],
   apiStatus: 201,
   apiCalls: [],
+  apiRequiresSession: false,
+  apiResponse: null,
 });
 
 async function startBff({ env = {} } = {}) {
@@ -73,6 +75,15 @@ async function startBff({ env = {} } = {}) {
   a.use(express.json());
   a.use((req, res) => {
     state.apiCalls.push({ method: req.method, url: req.originalUrl, body: req.body, headers: req.headers });
+    // a session the API accepts: the good one, or the one a renewal hands out
+    const session = req.headers['session-token'];
+    const accepted = !session || [tokens.GOOD, tokens.RENEWED].includes(session) || !state.apiRequiresSession;
+    if (!accepted) return res.status(401).json({ error: 'expired' });
+    if (state.apiResponse) {
+      const { status, headers = {}, body } = state.apiResponse;
+      res.set(headers);
+      return body === undefined ? res.status(status).end() : res.status(status).send(body);
+    }
     if (state.apiStatus === 204) return res.status(204).end();
     if (state.apiStatus === 429) res.set('Retry-After', '30');
     res.status(state.apiStatus).json({ ok: true });
@@ -94,6 +105,7 @@ async function startBff({ env = {} } = {}) {
     bff.call(route, { ...options, headers: { ...(cookie ? { cookie } : {}), ...(options.headers ?? {}) } });
 
   return {
+    baseUrl: `http://127.0.0.1:${bff.port}`,
     call,
     state,
     tokens,
