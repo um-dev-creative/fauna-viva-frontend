@@ -13,13 +13,15 @@ import { environment } from '@env/environment';
 import { routes } from './app.routes';
 import { AuthService } from './core/auth/auth.service';
 import { authInterceptor } from './core/http/auth.interceptor';
+import { clinicInterceptor } from './core/http/clinic.interceptor';
+import { errorInterceptor } from './core/http/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor, clinicInterceptor, errorInterceptor])),
     // who is signed in is known before the first screen, so a reload does not flash the login
     provideAppInitializer(() => inject(AuthService).restore()),
     provideTranslateService({

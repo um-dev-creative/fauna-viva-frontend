@@ -1,0 +1,87 @@
+<a
+  href="#contenido"
+  class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-fv-card focus:px-3 focus:py-2"
+>
+  {{ 'shell.skip' | translate }}
+</a>
+
+<header class="border-b border-fv-line bg-fv-card">
+  <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-2">
+    <p class="font-display text-lg font-bold text-fv-teal">{{ 'app.name' | translate }}</p>
+
+    @if (clinic.hasSeveral()) {
+      <label class="flex items-center gap-2 text-sm">
+        <span class="font-semibold">{{ 'shell.clinic' | translate }}</span>
+        <select class="min-h-11 rounded-xl border border-fv-line bg-fv-card px-2" (change)="choose($event)">
+          @for (c of clinic.clinics(); track c.id) {
+            <option [value]="c.id" [selected]="c.id === clinic.active()?.id">{{ c.nombre }}</option>
+          }
+        </select>
+      </label>
+    } @else if (clinic.active(); as active) {
+      <p class="text-sm font-semibold">{{ active.nombre }}</p>
+    }
+
+    <p class="ml-auto text-sm">{{ 'session.greeting' | translate: { name: name() } }}</p>
+    <button type="button" class="min-h-11 rounded-xl border border-fv-line px-3 text-sm font-semibold" (click)="logout()">
+      {{ 'session.logout' | translate }}
+    </button>
+    <button
+      type="button"
+      class="min-h-11 min-w-11 rounded-xl border border-fv-line px-3 text-sm font-semibold md:hidden"
+      aria-controls="menu-principal"
+      [attr.aria-expanded]="menuOpen()"
+      (click)="toggleMenu()"
+    >
+      {{ 'shell.menu' | translate }}
+    </button>
+  </div>
+
+  <nav
+    id="menu-principal"
+    class="mx-auto max-w-6xl flex-col gap-1 px-4 pb-2 md:flex md:flex-row md:flex-wrap"
+    [class.hidden]="!menuOpen()"
+    [class.flex]="menuOpen()"
+    [attr.aria-label]="'shell.mainMenu' | translate"
+  >
+    @for (item of items(); track item.key) {
+      <a
+        [routerLink]="'/' + item.key"
+        routerLinkActive="bg-fv-teal text-white"
+        class="inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-semibold"
+        (click)="closeMenu()"
+      >
+        {{ 'nav.' + item.key | translate }}
+      </a>
+    }
+  </nav>
+</header>
+
+<div class="fixed inset-x-0 bottom-4 z-40 mx-auto flex max-w-md flex-col gap-2 px-4" role="status" aria-live="polite">
+  @for (notice of notifications.notices(); track notice.id) {
+    <div class="flex items-start gap-3 rounded-xl border border-fv-line bg-fv-card px-4 py-3 shadow">
+      <p class="flex-1 text-sm">{{ notice.text }}</p>
+      <button
+        type="button"
+        class="min-h-11 min-w-11 rounded-lg text-sm font-semibold"
+        [attr.aria-label]="'shell.dismiss' | translate"
+        (click)="notifications.dismiss(notice.id)"
+      >
+        ✕
+      </button>
+    </div>
+  }
+</div>
+
+<main id="contenido" class="mx-auto max-w-6xl px-4 py-6" tabindex="-1">
+  @if (clinic.active()) {
+    @for (key of screenKey(); track key) {
+      <router-outlet />
+    }
+  } @else {
+    <section class="rounded-xl border border-fv-line bg-fv-card px-4 py-6">
+      <h1 class="font-display text-2xl font-bold">{{ 'shell.noClinics.title' | translate }}</h1>
+      <p class="mt-2">{{ 'shell.noClinics.text' | translate }}</p>
+    </section>
+  }
+</main>

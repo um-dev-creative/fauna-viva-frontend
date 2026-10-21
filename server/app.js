@@ -3,6 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const compression = require('compression');
+const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const path = require('node:path');
@@ -20,6 +21,7 @@ const {
 const { traceMiddleware } = require('./shared/trace');
 const { requireCsrfHeader } = require('./shared/csrf');
 const authRoutes = require('./routes/auth.routes');
+const apiRoutes = require('./routes/api.routes');
 
 /** @param {{distPath?: string}} [options] where the built Angular app lives (overridable for tests) */
 function createApp({ distPath = path.join(__dirname, '../dist/fauna-viva-frontend/browser') } = {}) {
@@ -28,6 +30,9 @@ function createApp({ distPath = path.join(__dirname, '../dist/fauna-viva-fronten
   app.disable('x-powered-by');
   // Behind nginx the client IP is in X-Forwarded-For; without this every user shares nginx's IP in the rate limits
   app.set('trust proxy', TRUST_PROXY);
+  // Security headers. No Content-Security-Policy yet: Angular's inline critical CSS needs a per-response nonce (tracked as a
+  // follow-up); frame, sniffing and referrer protections are on.
+  app.use(helmet({ contentSecurityPolicy: false }));
   app.use(compression());
   app.use(cors({
     origin: CORS_ORIGIN,
@@ -45,6 +50,7 @@ function createApp({ distPath = path.join(__dirname, '../dist/fauna-viva-fronten
 
   app.use('/api', requireCsrfHeader);
   app.use('/api/v1/auth', authRoutes);
+  app.use('/api/v1', apiRoutes);
   // an unknown API path is a 404, not the SPA's index.html (which would answer 200 to a typo'd endpoint)
   app.use('/api', (_req, res) => res.status(404).json({ error: 'Not found' }));
 

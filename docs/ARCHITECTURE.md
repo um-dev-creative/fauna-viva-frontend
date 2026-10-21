@@ -30,6 +30,19 @@ flowchart LR
 
 Lo que cada tarea siguiente añade: B-02 proxy al backend con renovación silenciosa, B-03 estructura del portal por rol y selector de clínica.
 
+## BFF internals
+
+El BFF es la única puerta al backend. Orden de los middleware en `createApp()`: `helmet` → compresión → CORS (solo `CORS_ORIGIN`, con credenciales) → JSON → cookies → límite de tasa global → traza → `/health` → exigencia CSRF en `/api` → rutas de autenticación → **proxy** → `404` JSON de `/api` → portal estático.
+
+- **Proxy** (`routes/api.routes.js` + `shared/proxy.js`): toda llamada a `/api/v1/*` que el BFF no responda él mismo se reenvía a `fauna-viva-rest` tal cual, de modo que un módulo nuevo no requiere cambios aquí. Una pantalla que combine módulos agrega su propia ruta antes del proxy.
+- **Qué viaja al backend**: `session-token` (desde la cookie; el que mande el navegador se ignora), `X-Clinic-Id`, `If-Match`, `Idempotency-Key` y `traceparent`. Los parámetros repetidos (`sort=a&sort=b`) se envían sin índices, como los lee Spring. No viajan cookies ni otras cabeceras del navegador.
+- **Qué vuelve al navegador**: `ETag`, `X-Total-Count`, `Link`, `Content-Disposition` e `Idempotent-Replayed`, además del estado y el cuerpo; un `application/problem+json` conserva su tipo.
+- **Renovación silenciosa**: ante un `401` del backend con refresh token, una sola renovación y un reintento; si Backbone rechaza el refresh, se borran las cookies y el portal recibe `401`. Sin refresh token, el `401` pasa tal cual.
+- **Rutas con `..`**: una ruta que intente salir de `/api/v1` (incluso codificada, `%2e%2e` o `..%2F`) recibe `400` y nunca llega al backend.
+- **Fallos**: backend caído = `502` con `traceId`, sin revelar la causa ni tocar las cookies.
+- **Cabeceras de seguridad**: `helmet` con todo lo estándar salvo `Content-Security-Policy`, que queda pendiente (el CSS crítico en línea de Angular necesita un nonce por respuesta).
+- **Límites**: global `RATE_LIMIT_MAX` por IP y ventana de 15 min, con `429` y `Retry-After`; `trust proxy` configurable para que cuente la IP real detrás de nginx.
+
 ## Seguridad
 
 El navegador nunca ve un token: el BFF los guarda en cookies `httpOnly`, `SameSite=Lax` (`Secure` con `COOKIE_SECURE=true`) llamadas `fv_session` y `fv_refresh`, con la vida del refresh token. El portal solo recibe el perfil (`id`, `username`, `firstname`, `lastname`).
@@ -61,6 +74,7 @@ sequenceDiagram
 - `src/app/{core,shared,features}`; rutas cargadas de forma diferida; alias `@app`, `@core`, `@features`, `@env`.
 - Textos en `public/i18n/es-VE.json`, cargados con `provideTranslateHttpLoader`. Idioma por defecto y de respaldo: `es-VE`.
 - Estilos con Tailwind CSS 4; los colores de marca son tokens `--color-fv-*` en `src/styles.css` (la marca por clínica, P-08, los reemplaza).
+- Estructura por rol, clínica activa, interceptores y formatos: ver [`docs/tecnica/portal/estructura.md`](tecnica/portal/estructura.md).
 - Las llamadas van a `/api/v1`; en desarrollo `proxy.conf.json` las envía al BFF.
 
 ## Calidad
